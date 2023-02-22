@@ -48,7 +48,7 @@ const turfSchema = new mongoose.Schema({
     location: {
         type: {
           type: String, // Don't do `{ location: { type: String } }`
-          enum: ['point'], // 'location.type' must be 'Point'
+          enum: ['Point'], // 'location.type' must be 'Point'
           required: true
         },
         coordinates: {

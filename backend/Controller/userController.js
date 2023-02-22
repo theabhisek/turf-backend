@@ -73,12 +73,13 @@ exports.login = async function (req, res) {
         return res.status(400).json({ Error: err })
     }
 }
+
 exports.createOtp = async function (req, res) {
     try {
         const { mobile_number } = req.body;
         let user = await allUser.findOne({ mobile_number });
         if (user) {
-            return res.status(200).json({ "message": " you are already register !", otp: msg.otp })
+            return res.status(200).json({ "message": " you are already register !" })
         }
         else {
             let msg = await notification.otpsend(mobile_number)
@@ -139,4 +140,66 @@ exports.updateUserProfile=async(req,res)=>{
 catch(error){
     return res.status(500).json({success:false,message:error.message})
 }
+}
+
+exports.getUser = async(req,res)=>{
+    try{
+        const user = await allUser.findById(req.token.id)
+        const userDetails = await USER.findOne({user_id:user._id})
+         if(!user){
+            return res.status(403).json({message:"user not found"})
+         }
+         return res.json(
+            {
+                data:{user,userDetails}
+            }
+         )
+    }
+    catch(err){
+        return res.status(500).json({error:err})
+
+    }
+
+}
+
+exports.getAllUser = async(req,res)=>{
+    try{
+        const user = await allUser.find({role:"user"})
+        if(!user){
+            return res.status(403).json({message:"user not found"})
+         }
+         return res.json(
+            {
+                data:userDetails
+            }
+        )
+    }
+    catch(err){
+        return res.status(500).json({error:err})
+
+    }
+
+}
+
+exports.findTurf = async(req,res)=>{
+    try{
+        const location = await USER.findOne({user_id:req.token.id})
+        let cordinat =location?.location?.coordinates
+         if(!location){
+            return res.status(403).json({message:"user not found"})
+         }
+        let data = await Turf.find({location:{$geoWithin:{$centerSphere : [[cordinat[0],
+            cordinat[1]],5/3963.2]}}},{turfname:1,location_name:1})
+        console.log(data)
+         return res.json(
+            {
+                data:{data}
+            }
+         )
+    }
+    catch(err){
+        return res.status(500).json({error:err})
+
+    }
+
 }

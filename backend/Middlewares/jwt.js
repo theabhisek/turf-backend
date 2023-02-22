@@ -38,16 +38,13 @@ try {
 
 exports.verify = function (req, res, secret = null) {
   let token = req.headers["x-access-token"] || req.headers["authorization"];
-  console.log(token)
   if (!token || token === "") {
     return null;
   } else if (token.startsWith("Bearer ")) {
     // Remove Bearer from string
     token = token.slice(7, token.length);
-    console.log("hello",token)
     try {
       let info = jwt.verify(token,process.env.JWT_SECRET_KEY);
-      console.log(info)
       return info;
     } catch (err) {
       return null;

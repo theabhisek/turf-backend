@@ -17,7 +17,11 @@ router.post("/login/verifyOtp",allUser.loggedIn)
 
 //
 router.put("/userUpdate/:id",isAuthenticated,allUser.updateUserProfile)
-// router.get("/listAllBooking",isAuthenticated,allUser.showBookings)
+router.get("/getUser",isAuthenticated,allUser.getUser)
+
+router.get("/nearestTurf",isAuthenticated,allUser.findTurf)
+
+
 
 
 module.exports=router;

@@ -3,7 +3,6 @@ const jwt=require('./jwt')
 
 exports.isAuthenticated =async(req,res,next)=>{
     try{ 
-        console.log(req.body)
         const decoded = await jwt.verify(req,res);
         if(!decoded){
          return res.status(401).json({
@@ -11,7 +10,7 @@ exports.isAuthenticated =async(req,res,next)=>{
         });
 
     }
-    req.token=await allUser.findById(decoded.id)
+    req.token=await allUser.findById(decoded._id)
     next();
 }
 catch(error){
