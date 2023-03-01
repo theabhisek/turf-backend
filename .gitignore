@@ -1,2 +1,4 @@
 /node_moules
 *node_modules/*
+*tmp/*
+/tmp

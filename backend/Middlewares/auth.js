@@ -5,12 +5,12 @@ exports.isAuthenticated =async(req,res,next)=>{
     try{ 
         const decoded = await jwt.verify(req,res);
         if(!decoded){
-         return res.status(401).json({
-            message:"Please login first"
-        });
-
-    }
-    req.token=await allUser.findById(decoded._id)
+            return res.status(401).json({
+                message:"Please login first"
+            });
+            
+        }
+        req.token=await allUser.findById(decoded._id)
     next();
 }
 catch(error){

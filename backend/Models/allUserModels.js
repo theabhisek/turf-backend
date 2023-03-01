@@ -1,30 +1,19 @@
 const mongoose = require('mongoose')
-const jwt = require("jsonwebtoken")
-// const bcrypt=require('bcrypt');
-// const crypto=require('crypto')
-
 
 const userSchema = new mongoose.Schema({
-    firstname: {
+    fullname: {
         type: String,
-        required: [true, "Mandatory to Enter First Name"]
-    },
-    lastname: {
-        type: String,
-        required: [true, "Mandatory to Enter last name"]
+        required: [true, "Mandatory to Enter Name"]
     },
     mobile_number: {
         type: Number,
-        required: [true, "Please Enter mobile number"]
+        required: [true, "Please Enter mobile number"],
+        unique: true
     },
     role: {
         type: String,
-        enum: ["admin", "marchent", "user"],
+        enum: ["admin", "merchant", "user"],
         default: "user"
-    },
-    profile_image: {
-        type: String,
-        default: null
     },
     user_status: {
         type: String,
