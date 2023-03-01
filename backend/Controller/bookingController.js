@@ -28,3 +28,13 @@ exports.creteBooking= async(req,res)=>{
         return res.status(500).json({err:err.messsage})
     }
 }
+exports.showMyBooking = async( req,res)=>{
+    try{
+        const result = await BOOKING.findOne({user_id:req.token.id})
+        return res.status(200).json({messsage:result})
+        
+    }
+    catch(err){
+        return res.status(500).json({err:err.messsage})
+    }
+}

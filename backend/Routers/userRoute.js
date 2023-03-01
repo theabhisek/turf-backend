@@ -1,7 +1,7 @@
 const express=require('express');
 const router=express.Router();
 const allUser = require("../Controller/userController")
-const{isAuthenticated}=require('../Middlewares/auth')
+const{isAuthenticated,isAdmin}=require('../Middlewares/auth')
 
 
 //login and register and logout
@@ -14,6 +14,8 @@ router.post("/login/verifyOtp",allUser.loggedIn)
 //upload profile
 router.put("/userUpdate/:id",isAuthenticated,allUser.updateUserProfile)
 router.get("/getUser",isAuthenticated,allUser.getUser)
+router.get("/getUser",isAdmin,allUser.getAllUser)
+
 
 
 

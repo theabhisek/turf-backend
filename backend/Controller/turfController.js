@@ -81,13 +81,14 @@ exports.getTurfDeatails = async (req, res) => {
 
 exports.playgroundDeatails = async (req, res) => {
     try {
-        const desiredDate = new Date('2023-02-27');
+        const{ currentDate, day} =req.body
+        const desiredDate = new Date(currentDate);
         const turfDeatails = await Turf.findOne({ "playground_list": { $elemMatch: { "_id": req.params.id  } } }
         , { "playground_list.$": 1,"available":1 })
         let bookings=await BOOKING.find({ createdAt: { $gte: desiredDate }},{st:1,et:1,_id:0} )
 
-        let playground=turfDeatails.playground_list[0].price["tuesday"]
-        let timeTurf=turfDeatails.available["tuesday"]
+        let playground=turfDeatails.playground_list[0].price[day]
+        let timeTurf=turfDeatails.available[day]
         let slots = await createSlots.slots(timeTurf,bookings)
 
         if (!turfDeatails) {

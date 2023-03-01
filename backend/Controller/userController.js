@@ -139,13 +139,28 @@ exports.getAllUser = async (req, res) => {
         }
         return res.json(
             {
-                data: userDetails
+                data: user
+            }
+        )
+    }
+    catch (err) {
+        return res.status(500).json({ error: err.message })
+    }
+}
+
+exports.getTurf= async (req, res) => {
+    try {
+        const user = await allUser.find({ role: "merchant" })
+        if (!user) {
+            return res.status(403).json({ message: "user not found" })
+        }
+        return res.json(
+            {
+                data: user
             }
         )
     }
     catch (err) {
         return res.status(500).json({ error: err })
-
     }
-
 }
