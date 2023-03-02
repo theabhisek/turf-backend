@@ -5,16 +5,25 @@ const{isAuthenticated,isAdmin}=require('../Middlewares/auth')
 
 
 //login and register and logout
-router.post("/createOtp",allUser.createOtp)
+router.post("/sendOtp",allUser.sendOtp)
 router.post("/registerUser",allUser.veryfiyUser)
 
 //register turf 
 router.post("/login/verifyOtp",allUser.loggedIn)
 
 //upload profile
-router.put("/userUpdate/:id",isAuthenticated,allUser.updateUserProfile)
+router.put("/userUpdate",isAuthenticated,allUser.updateUserProfile)
 router.get("/getUser",isAuthenticated,allUser.getUser)
-router.get("/getUser",isAdmin,allUser.getAllUser)
+router.patch("/addAndRemoveFavourites",isAuthenticated,allUser.addAndRemovefavourites)
+router.get("/showFavourites",isAuthenticated,allUser.getfavourites)
+
+
+
+
+//admin
+router.get("/getAllUser",isAdmin,allUser.getAllUser)
+router.get("/getTurfUser",isAdmin,allUser.getAllUser)
+
 
 
 

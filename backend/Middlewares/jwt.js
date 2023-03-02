@@ -20,35 +20,33 @@ exports.signUser = async function (user,result) {
 exports.signTurf= async function (user,result) {
   const payload = {
       _id :user._id,
-      mobile_number:user?.mobile_number,
+      mobile_number:user.mobile_number,
       firstname:user.fullname,
-      location:result?.location,
-      location_name:result?.location_name,
-      role:user?.role,
-      profile_image:user?.profile_image,
-      turfname:result?.turfname,
-      marchent_id:result?.marchent_id
+      location:result.location,
+      location_name:result.location_name,
+      role:user.role,
+      profile_image:user.profile_image,
+      turfname:result.turfname,
+      marchent_id:result.marchent_id
   }
-  console.log(process.env.JWT_SECRET_KEY)
 try {
   return jwt.sign(payload, process.env.JWT_SECRET_KEY,{expiresIn: '1d'});
-} catch (err) {}
+} catch (err) {
+  return err
+}
 };
 
 exports.verify = function (req, res, secret = null) {
   let token = req.headers["x-access-token"] || req.headers["authorization"];
   if (!token || token === "") {
-    console.log(token)
     return null;
   } else if (token.startsWith("Bearer ")) {
     // Remove Bearer from string
     token = token.slice(7, token.length);
     try {
       let info = jwt.verify(token,process.env.JWT_SECRET_KEY);
-      console.log(process.env.JWT_SECRET_KEY)
       return info;
     } catch (err) {
-      console.log(err)
       return null;
     }
   }

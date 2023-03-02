@@ -12,7 +12,7 @@ exports.nearestfindTurf = async (req, res) => {
     try {
         const { latitude, longitude } = req.body;
         const location = await USER.findOne({ user_id: req.token.id })
-        let cordinat = location?.location?.coordinates
+        let cordinat = location.location.coordinates
         if (latitude && longitude) {
             let data = await Turf.find({
                 location: {
@@ -49,16 +49,18 @@ exports.nearestfindTurf = async (req, res) => {
 
 exports.getTurfDeatails = async (req, res) => {
     try {
-        let user = await allUser.findById(req?.token?.id)
+        console.log(req.token)
+        let user = await allUser.findById({_id:req.token._id})
         let turfDeatails;
-        if (user?.role == "" || user?.role == "merchant") {
-            turfDeatails = await Turf.findOne({ _id: req?.params?.id })
+        if (user.role == "admin" || user.role == "merchant") {
+            console.log("k")
+            turfDeatails = await Turf.findOne({ _id: req.params.id })
         } 
         else {
-            turfDeatails = await Turf.findOne({ _id: req?.params?.id }
+            turfDeatails = await Turf.findOne({ _id: req.params.id }
                 , {
                     turfname: 1, location_name: 1, playground: 1, playground_list: 1, rating: 1, photos: 1,
-                    services: 1, opening_time: 1, closing_time: 1
+                    services: 1, available:1
                 })
         }
         if (!turfDeatails) {
@@ -148,4 +150,63 @@ exports.imagesUpload = async (req, res) => {
     catch (err) {
         return res.status(500).json({ error: err.message })
     }
+}
+
+exports.showAllTurf = async (req, res)=>{
+    try {
+        let allTurf= await Turf.find({},{ turfname: 1, location_name: 1, rating: 1 })
+        return res.status(200).json({ success: false, message: "turf get successful",turfList:allTurf })
+    }
+    catch (err) {
+        return res.status(500).json({ error: err.message })
+    }
+}
+
+exports.TurDeatails = async (req, res) => {
+    try {
+        console.log(req.token)
+        let user = await allUser.findById({_id:req.token._id})
+        let turfDeatails;
+        if (user.role == "admin" || user.role == "merchant") {
+            turfDeatails = await Turf.findOne({ _id: req.params.id })
+            console.log(turfDeatails)
+            user = await allUser.findById({_id:turfDeatails.marchent_id})
+        } 
+        if (!turfDeatails) {
+            return res.status(403).json({ message: "turf not found" })
+        }
+        return res.status(200).json(
+            {
+                message: "turf deatails",
+                data: turfDeatails,user
+
+            }
+        )
+    }
+    catch (err) {
+        return res.status(500).json({ error: err.message })
+
+    }
+
+}
+
+exports.verification= async (req, res) => {
+    try {
+        let turfRequest = await Turf.find({verify:false},{services:1,turfname:1,location_name:1}).populate('marchent_id', 'fullname mobile_number').exec()
+        if (!turfRequest) {
+            return res.status(403).json({ message: "turf request not found" })
+        }
+        return res.status(200).json(
+            {
+                message: "turf request",
+                data: turfRequest
+
+            }
+        )
+    }
+    catch (err) {
+        return res.status(500).json({ error: err.message })
+
+    }
+
 }

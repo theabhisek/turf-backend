@@ -15,14 +15,6 @@ const turfSchema = new mongoose.Schema({
     profile_image: {
         type: String
     },
-    opening_time: {
-        type: String,
-        required: true
-    },
-    closing_time: {
-        type: String,
-        required: true
-    },
     services: {
         type: Array,
     },
@@ -66,7 +58,11 @@ const turfSchema = new mongoose.Schema({
         require: true,
         unique: true
     },
-    available: {}
+    available: {},
+    verify:{
+        type:Boolean,
+        default:false
+    }
 },{ timestamps: true });
 
 module.exports = mongoose.model('Turf', turfSchema)
