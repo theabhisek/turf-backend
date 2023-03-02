@@ -15,8 +15,10 @@ router.get("/getPlaygroundDeatails/:id",TURF.playgroundDeatails)
 router.post("/profileUpload/:id",isAuthenticated,TURF.uploadProfile)
 router.post("/imagesUpload/:id",isAuthenticated,TURF.imagesUpload)
 router.get("/turfDeatails/:id",isAuthenticated,TURF.TurDeatails)
-//admin
+//adminverified
 router.get("/getVerificationRequest",isAdmin,TURF.verification)
+router.put("/turfVerify",isAdmin,TURF.verified)
+
 
 
 module.exports=router;

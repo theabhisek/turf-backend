@@ -49,20 +49,11 @@ exports.nearestfindTurf = async (req, res) => {
 
 exports.getTurfDeatails = async (req, res) => {
     try {
-        console.log(req.token)
-        let user = await allUser.findById({_id:req.token._id})
-        let turfDeatails;
-        if (user.role == "admin" || user.role == "merchant") {
-            console.log("k")
-            turfDeatails = await Turf.findOne({ _id: req.params.id })
-        } 
-        else {
-            turfDeatails = await Turf.findOne({ _id: req.params.id }
-                , {
-                    turfname: 1, location_name: 1, playground: 1, playground_list: 1, rating: 1, photos: 1,
-                    services: 1, available:1
-                })
-        }
+        turfDeatails = await Turf.findOne({ _id: req.params.id }
+            , {
+                turfname: 1, location_name: 1, playground: 1, playground_list: 1, rating: 1, photos: 1,
+                services: 1, available: 1
+            })
         if (!turfDeatails) {
             return res.status(403).json({ message: "turf not found" })
         }
@@ -83,15 +74,15 @@ exports.getTurfDeatails = async (req, res) => {
 
 exports.playgroundDeatails = async (req, res) => {
     try {
-        const{ currentDate, day} =req.body
+        const { currentDate, day } = req.body
         const desiredDate = new Date(currentDate);
-        const turfDeatails = await Turf.findOne({ "playground_list": { $elemMatch: { "_id": req.params.id  } } }
-        , { "playground_list.$": 1,"available":1 })
-        let bookings=await BOOKING.find({ createdAt: { $gte: desiredDate }},{st:1,et:1,_id:0} )
+        const turfDeatails = await Turf.findOne({ "playground_list": { $elemMatch: { "_id": req.params.id } } }
+            , { "playground_list.$": 1, "available": 1 })
+        let bookings = await BOOKING.find({ createdAt: { $gte: desiredDate } }, { st: 1, et: 1, _id: 0 })
 
-        let playground=turfDeatails.playground_list[0].price[day]
-        let timeTurf=turfDeatails.available[day]
-        let slots = await createSlots.slots(timeTurf,bookings)
+        let playground = turfDeatails.playground_list[0].price[day]
+        let timeTurf = turfDeatails.available[day]
+        let slots = await createSlots.slots(timeTurf, bookings)
 
         if (!turfDeatails) {
             return res.status(403).json({ message: "turf not found" })
@@ -99,7 +90,7 @@ exports.playgroundDeatails = async (req, res) => {
         return res.status(200).json(
             {
                 message: "turf deatails",
-                price: playground,timeTurf,slots
+                price: playground, timeTurf, slots
 
             }
         )
@@ -152,10 +143,10 @@ exports.imagesUpload = async (req, res) => {
     }
 }
 
-exports.showAllTurf = async (req, res)=>{
+exports.showAllTurf = async (req, res) => {
     try {
-        let allTurf= await Turf.find({},{ turfname: 1, location_name: 1, rating: 1 })
-        return res.status(200).json({ success: false, message: "turf get successful",turfList:allTurf })
+        let allTurf = await Turf.find({ verify: true }, { turfname: 1, location_name: 1, rating: 1 })
+        return res.status(200).json({ success: true, message: "turf get successful", turfList: allTurf })
     }
     catch (err) {
         return res.status(500).json({ error: err.message })
@@ -165,20 +156,20 @@ exports.showAllTurf = async (req, res)=>{
 exports.TurDeatails = async (req, res) => {
     try {
         console.log(req.token)
-        let user = await allUser.findById({_id:req.token._id})
+        let user = await allUser.findById({ _id: req.token._id })
         let turfDeatails;
         if (user.role == "admin" || user.role == "merchant") {
             turfDeatails = await Turf.findOne({ _id: req.params.id })
             console.log(turfDeatails)
-            user = await allUser.findById({_id:turfDeatails.marchent_id})
-        } 
+            user = await allUser.findById({ _id: turfDeatails.marchent_id })
+        }
         if (!turfDeatails) {
             return res.status(403).json({ message: "turf not found" })
         }
         return res.status(200).json(
             {
                 message: "turf deatails",
-                data: turfDeatails,user
+                data: turfDeatails, user
 
             }
         )
@@ -190,9 +181,9 @@ exports.TurDeatails = async (req, res) => {
 
 }
 
-exports.verification= async (req, res) => {
+exports.verification = async (req, res) => {
     try {
-        let turfRequest = await Turf.find({verify:false},{services:1,turfname:1,location_name:1}).populate('marchent_id', 'fullname mobile_number').exec()
+        let turfRequest = await Turf.find({ verify: false }, { services: 1, turfname: 1, location_name: 1 }).populate('marchent_id', 'fullname mobile_number').exec()
         if (!turfRequest) {
             return res.status(403).json({ message: "turf request not found" })
         }
@@ -200,6 +191,30 @@ exports.verification= async (req, res) => {
             {
                 message: "turf request",
                 data: turfRequest
+
+            }
+        )
+    }
+    catch (err) {
+        return res.status(500).json({ error: err.message })
+
+    }
+
+}
+
+exports.verified = async (req, res) => {
+    try {
+        const { turf_id, flage } = req.body
+        let turfRequest = await Turf.findOneAndUpdate({ _id: turf_id }, { $set: { verify: flage } })
+        console.log(turfRequest)
+        if (turfRequest.verify==true) {
+            return res.status(403).json({ message: "turf unverified" })
+        }else if(turfRequest.verify==false){
+            return res.status(403).json({ message: "turf verified" })
+        }
+        return res.status(200).json(
+            {
+                message: "turf is not verify",
 
             }
         )

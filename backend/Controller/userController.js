@@ -66,7 +66,6 @@ exports.loggedIn = async function (req, res) {
             let user = await allUser.findOne({ mobile_number });
             if (user) {
                 let token;
-                console.log(user)
                 if (user.role == "merchant") {
                     let marchent_id = user._id
                     const result = await Turf.findOne({ marchent_id })
