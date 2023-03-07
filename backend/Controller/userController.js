@@ -198,6 +198,7 @@ exports.getAllUser = async (req, res) => {
         return res.status(500).json({ error: err.message })
     }
 }
+
 exports.getAllturfs = async (req,res)=>{
     try {
         const turfList = await Turf.find({},{turfname: 1, location_name: 1, rating: 1})
@@ -214,3 +215,41 @@ exports.getAllturfs = async (req,res)=>{
         return res.status(500).json({ error: err.message })
     }
 }
+
+exports.blockUserAndTurf = async (req,res)=>{
+    try {
+        const user = await allUser.findOneAndUpdate({_id:req.params.id},{ $set:{user_status:"blocked"}  })
+        let turf;
+        if (user.role=="merchant") {
+            turf = await Turf.findOneAndUpdate({marchent_id:user._id},{ $set:{verify:false}  })
+        }
+        return res.json(
+            {
+                data: {user,turf}
+            }
+        )
+    }
+    catch (err) {
+        return res.status(500).json({ error: err.message })
+    }
+}
+
+exports.unblockUserAndTurf = async (req,res)=>{
+    try {
+        const user = await allUser.findOneAndUpdate({_id:req.params.id},{ $set:{user_status:"unblocked"}  })
+        let turf;
+        if (user.role=="merchant") {
+            turf = await Turf.findOneAndUpdate({marchent_id:user._id},{ $set:{verify:true}  })
+            
+        }
+        return res.json(
+            {
+                data: {user,turf}          
+            }
+        )
+    }
+    catch (err) {
+        return res.status(500).json({ error: err.message })
+    }
+}
+

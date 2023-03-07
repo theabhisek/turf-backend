@@ -14,23 +14,23 @@ const bookingSchema = new mongoose.Schema({
         required: true,
         ref: 'Turf'
     },
-    createdat: {
-        type: Date,
-        default: Date.now()
-    },
     playground_id: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,     
         ref: 'Turf'
     },
     booking_price: {
-        type: Number
+        type: String,
+        required: true,
     },
     booking_status: {
-        type: Boolean,
-        required: [true, "confimed booking"]
+        type: String,
+        enum: ['created', 'paid', 'refunded', 'failed'],
+        default: 'created',
     },
     payment_id: {
-        type: String
+        type: String,
+        required: true,
     },
     startTime: {
         type: String

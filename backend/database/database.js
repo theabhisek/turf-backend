@@ -2,25 +2,18 @@ const mongoose=require('mongoose')
 const cloudinary = require("cloudinary")
 mongoose.set('strictQuery', false);
 
-
-
-const url = "mongodb://localhost:27017/turf";
-const username = 'abhishek';
-const password = '12345';
-const dbName = 'turf';
-
 // Set up the options for the MongoDB connection
 const options = {
-  user: username,
-  pass: password,
-  dbName: dbName,
+  user: process.env.username,
+  pass: process.env.password,
+  dbName: process.env.dbName,
   useNewUrlParser: true,
   useUnifiedTopology: true
 };
 exports.connectDb= function (){
-  mongoose.connect(url, options)
+  mongoose.connect(process.env.url, options)
   .then(() => {
-    console.log('Connected to database');
+    console.log(`Connected to database ${process.env.url}`);
   })
   .catch((err) => {
     console.log(err.message);

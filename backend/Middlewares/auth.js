@@ -26,7 +26,7 @@ exports.isAdmin = async (req, res, next) => {
     try {
         const decoded = await jwt.verify(req, res);
         if (!decoded) {
-            res.status(401).json({
+            return res.status(401).json({
                 message: "Please login first"
             });
 
@@ -36,7 +36,7 @@ exports.isAdmin = async (req, res, next) => {
             next();
         }
         else {
-            res.status(500).json({
+           return  res.status(500).json({
                 success: false,
                 message: "you are unauthrized to access this route"
 

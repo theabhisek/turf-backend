@@ -59,10 +59,10 @@ const turfSchema = new mongoose.Schema({
         unique: true
     },
     available: {},
-    verify:{
-        type:Boolean,
-        default:false
+    verify: {
+        type: Boolean,
+        default: false
     }
-},{ timestamps: true });
+}, { timestamps: true });
 
 module.exports = mongoose.model('Turf', turfSchema)

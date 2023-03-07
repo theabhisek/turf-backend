@@ -30,7 +30,7 @@ exports.signTurf= async function (user,result) {
       marchent_id:result.marchent_id
   }
 try {
-  return jwt.sign(payload, process.env.JWT_SECRET_KEY,{expiresIn: '1d'});
+  return jwt.sign(payload, process.env.JWT_SECRET_KEY)
 } catch (err) {
   return err
 }

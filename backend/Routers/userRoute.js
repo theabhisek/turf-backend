@@ -22,7 +22,10 @@ router.get("/showFavourites",isAuthenticated,allUser.getfavourites)
 
 //admin
 router.get("/getAllUser",isAdmin,allUser.getAllUser)
-router.get("/getTurfUser",isAdmin,allUser.getAllUser)
+router.get("/getTurfUser",isAdmin,allUser.getAllturfs)
+router.put("/blockUserAndTurf/:id",isAdmin,allUser.blockUserAndTurf)
+router.put("/unblockUserAndTurf/:id",isAdmin,allUser.unblockUserAndTurf)
+
 
 
 
