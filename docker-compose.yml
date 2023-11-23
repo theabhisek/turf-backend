@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  #Mongo services
+  mongo-db:
+    container_name: mongo-db
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes: 
+      - mongo-db:/data/db
+
+  # Node api services 
+  api:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://mongo-db:27017
+      DB_NAME: turf
+      NAME: app_user
+    depends_on: 
+      - mongo-db
+
+volumes:
+  mongo-db: {}
